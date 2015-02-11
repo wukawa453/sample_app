@@ -56,4 +56,16 @@ class UserTest < ActiveSupport::TestCase
     @user.password = @user.password_confirmation = "a" * 5
     assert_not @user.valid?
   end
+
+  test "email should be downcased when reloaded from memory" do
+    mixed_case_email = "nigGaSInPArIS@foobar.CN"
+    @user.email = mixed_case_email
+    @user.save
+    assert_equal mixed_case_email.downcase, @user.reload.email
+  end
+
+  test "email domains with consecutive dots should work" do
+    @user.email = "chriswu452@gmail..com"
+    assert_not @user.valid?
+  end
 end
