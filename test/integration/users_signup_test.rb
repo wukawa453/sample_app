@@ -10,6 +10,11 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
              password_confirmation: "afafaa"}
     end
     assert_template 'users/new'
+    assert_select 'div#error_explanation'
+    assert_select 'div.alert'
+    assert_select 'div.alert-danger'
+    assert_select 'li', "Password confirmation doesn't match Password"
+    assert_select 'li', "Email is invalid"
   end
 
   test "valid email signup" do
@@ -20,5 +25,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                            password_confirmation: "foobarski"}
     end
     assert_template 'users/show'
+    assert_not flash.empty?
+    assert_select 'div.alert-success', "Welcome to the Sample App!"
   end
 end
